@@ -21,10 +21,60 @@
       <div class="row">
         <div class="col-3">
           <div class="panel-wrapper panel-wrapper-2">
-            <div class="panel"></div>
+            <div class="panel">
+              <div id="rainWetChart"></div>
+            </div>
           </div>
           <div class="panel-wrapper panel-wrapper-2">
-            <div class="panel"></div>
+            <div class="panel">
+              <table class="warn-table">
+                <tr>
+                  <th>预警</th>
+                  <th>地点</th>
+                  <th>处理意见</th>
+                </tr>
+                <tr>
+                  <td>大雨</td>
+                  <td>观测点1</td>
+                  <td>提醒司机注意安全</td>
+                </tr>
+                <tr>
+                  <td>大雨</td>
+                  <td>观测点1</td>
+                  <td>提醒司机注意安全</td>
+                </tr>
+                <tr>
+                  <td>大雨</td>
+                  <td>观测点1</td>
+                  <td>提醒司机注意安全</td>
+                </tr>
+                <tr>
+                  <td>大雨</td>
+                  <td>观测点1</td>
+                  <td>提醒司机注意安全</td>
+                </tr>
+                <tr>
+                  <td>大雨</td>
+                  <td>观测点1</td>
+                  <td>提醒司机注意安全</td>
+                </tr>
+                <tr>
+                  <td>大雨</td>
+                  <td>观测点1</td>
+                  <td>提醒司机注意安全</td>
+                </tr>
+                <tr>
+                  <td>大雨</td>
+                  <td>观测点1</td>
+                  <td>提醒司机注意安全</td>
+                </tr>
+                <tr>
+                  <td>大雨</td>
+                  <td>观测点1</td>
+                  <td>提醒司机注意安全</td>
+                </tr>
+              </table>
+            </div>
           </div>
         </div>
         <div class="col-6">
@@ -41,10 +91,14 @@
             </div>
           </div>
           <div class="panel-wrapper panel-wrapper-3">
-            <div class="panel"></div>
+            <div class="panel">
+              <div id="siteRankChart"></div>
+            </div>
           </div>
           <div class="panel-wrapper panel-wrapper-3">
-            <div class="panel"></div>
+            <div class="panel">
+              <div id="rainWindChart"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -52,43 +106,473 @@
 
     <script
       type="text/javascript"
-      src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=0bzMFHUePZfo1vVvmlsy7oQE6kvhKGbD"
+      src="http://api.map.baidu.com/api?v=1.0&&type=webgl&ak=0bzMFHUePZfo1vVvmlsy7oQE6kvhKGbD"
     ></script>
     <script type="text/javascript" src="./js/map_config.js"></script>
     <script type="text/javascript" src="./js/echarts.js"></script>
     <script>
+      var axisLineColor = "#2DC4BB";
+      var lineColor = "#3E9DD6";
+      var rainChart, rainWetChart, rainWindChart, siteRankChart
+
+      var pointArray = [
+        [112.316755,27.969804],
+        [112.417365,27.98869],
+        [112.474282,27.998386],
+        [112.58869,28.039715],
+        [112.677227,28.059608],
+        [112.765764,28.075417],
+        [112.885921,28.130988]
+      ]
+
       function initMap() {
         var map = new BMapGL.Map("mapContainer");
-        var point = new BMapGL.Point(116.404, 39.915);
-        map.centerAndZoom(point, 15); // 初始化地图，设置中心点坐标和地图级别 3-19
+        var point = new BMapGL.Point(112.58869,28.039715);
+        map.centerAndZoom(point, 11); // 初始化地图，设置中心点坐标和地图级别 3-19
         map.setMapStyleV2({ styleJson: map_theme_config });
         map.enableScrollWheelZoom(); //启用滚轮放大缩小，默认禁用
+
+        pointArray.map(item => {
+          console.log(item)
+          let point = new BMapGL.Point(item[0], item[1]);
+          let marker = new BMapGL.Marker(point);
+          map.addOverlay(marker);
+        })
       }
 
       function initRainChart() {
         let option = {
+          title: {
+            text: "温度变化",
+            textStyle: {
+              color: axisLineColor,
+              fontSize: 14,
+            },
+          },
+          grid: {
+            top: 50,
+            bottom: 20,
+          },
           xAxis: {
             type: "category",
-            data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            data: [
+              "03-01",
+              "03-06",
+              "03-11",
+              "03-16",
+              "03-21",
+              "03-26",
+              "03-31",
+            ],
+            axisLine: {
+              lineStyle: {
+                color: axisLineColor,
+              },
+            },
           },
           yAxis: {
             type: "value",
+            axisLine: {
+              show: false,
+            },
+            axisLabel: {
+              color: axisLineColor,
+            },
+            splitLine: {
+              lineStyle: {
+                type: "dashed",
+                color: axisLineColor,
+              },
+            },
           },
           series: [
             {
-              data: [820, 932, 901, 934, 1290, 1330, 1320],
+              data: [25.5, 27.6, 30.2, 20.5, 24.8, 25.9, 20.7],
               type: "line",
+              smooth: true,
+              lineStyle: {
+                color: lineColor,
+              },
+              color: [lineColor]
             },
           ],
         };
-        var rainChart = echarts.init(document.getElementById('rainChart'));
+        rainChart = echarts.init(document.getElementById("rainChart"));
         rainChart.setOption(option);
+      }
+
+      function initRainWetChart() {
+        let timeData = [
+          "3/15 0:00",
+          "3/19 1:00",
+          "3/19 2:00",
+          "3/19 3:00",
+          "3/19 4:00",
+          "3/19 5:00",
+          "3/19 6:00",
+          "3/19 7:00",
+          "3/19 8:00",
+          "3/19 9:00",
+          "3/19 10:00",
+          "3/19 11:00",
+          "3/19 12:00",
+          "3/19 13:00",
+          "3/19 14:00",
+          "3/19 15:00",
+          "3/19 16:00",
+          "3/19 17:00",
+          "3/19 18:00",
+          "3/19 19:00",
+          "3/19 20:00",
+          "3/19 21:00",
+          "3/19 22:00",
+          "3/19 23:00",
+        ];
+
+        let option = {
+          title: {
+            text: "雨量湿度关系图",
+            textStyle: {
+              color: axisLineColor,
+              fontSize: 14,
+            },
+          },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              animation: false,
+            },
+          },
+          axisPointer: {
+            link: { xAxisIndex: "all" },
+          },
+          grid: [
+            {
+              left: 50,
+              right: 50,
+              top: 70,
+              height: "30%",
+            },
+            {
+              left: 50,
+              right: 50,
+              top: "60%",
+              height: "30%",
+            },
+          ],
+          xAxis: [
+            {
+              type: "category",
+              boundaryGap: false,
+              axisLine: {
+                onZero: true,
+                lineStyle: {
+                  color: axisLineColor,
+                },
+              },
+              data: timeData,
+            },
+            {
+              gridIndex: 1,
+              type: "category",
+              boundaryGap: false,
+              axisLine: {
+                show: false,
+                lineStyle: {
+                  color: axisLineColor,
+                },
+              },
+              data: timeData,
+              position: "top",
+            },
+          ],
+          yAxis: [
+            {
+              name: "湿度(m^3/s)",
+              type: "value",
+              max: 500,
+              axisLine: {
+                lineStyle: {
+                  color: axisLineColor,
+                },
+              },
+              splitLine: {
+                lineStyle: {
+                  type: "dashed",
+                  color: axisLineColor,
+                },
+              },
+            },
+            {
+              gridIndex: 1,
+              name: "降雨量(mm)",
+              type: "value",
+              inverse: true,
+              axisLine: {
+                lineStyle: {
+                  color: axisLineColor,
+                },
+              },
+              splitLine: {
+                lineStyle: {
+                  type: "dashed",
+                  color: axisLineColor,
+                },
+              },
+            },
+          ],
+          series: [
+            {
+              name: "湿度",
+              type: "line",
+              symbolSize: 4,
+              hoverAnimation: false,
+              data: [
+                97,
+                82,
+                38,
+                95,
+                95,
+                62,
+                94,
+                94,
+                94,
+                75,
+                94,
+                92,
+                94,
+                44,
+                94,
+                154,
+                94,
+                94,
+                66,
+                94,
+                86,
+                94,
+                94,
+                94,
+              ],
+              lineStyle: {
+                color: lineColor,
+              },
+              color: [axisLineColor]
+            },
+            {
+              name: "降雨量",
+              type: "line",
+              xAxisIndex: 1,
+              yAxisIndex: 1,
+              symbolSize: 4,
+              hoverAnimation: false,
+              data: [
+                0.005,
+                0.005,
+                0,
+                0,
+                0,
+                0.355,
+                0.174,
+                0.009,
+                0.009,
+                0.012,
+                0.136,
+                0.208,
+                0.208,
+                0.208,
+                0.215,
+                7.359,
+                1.858,
+                0.458,
+                0.053,
+                0.053,
+                0.047,
+                0.045,
+              ],
+              lineStyle: {
+                color: lineColor,
+              },
+              color: [lineColor]
+            },
+          ],
+        };
+        rainWetChart = echarts.init(document.getElementById("rainWetChart"));
+        rainWetChart.setOption(option);
+      }
+
+      function initRainWindChart() {
+        let option = {
+          title: {
+            text: "风速雨量关系图",
+            textStyle: {
+              color: axisLineColor,
+              fontSize: 14,
+            },
+          },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              type: "cross",
+              label: {
+                backgroundColor: "#6a7985",
+              },
+            },
+          },
+          legend: {
+            data: ["风速", "雨量"],
+            right: 20,
+            textStyle: {
+              color: '#fff',
+              fontSize: 12
+            },
+            icon: 'rect'
+          },
+          grid: {
+            left: "3%",
+            right: "4%",
+            bottom: "3%",
+            top: 50,
+            containLabel: true,
+          },
+          xAxis: [
+            {
+              type: "category",
+              boundaryGap: false,
+              data: [
+                "03-01",
+                "03-06",
+                "03-11",
+                "03-16",
+                "03-21",
+                "03-26",
+                "03-31",
+              ],
+              axisLine: {
+                lineStyle: {
+                  color: axisLineColor,
+                },
+              },
+            },
+          ],
+          yAxis: [
+            {
+              type: "value",
+              axisLabel: {
+                color: axisLineColor,
+              },
+              splitLine: {
+                lineStyle: {
+                  type: "dashed",
+                  color: axisLineColor,
+                },
+              },
+            },
+          ],
+          series: [
+            {
+              name: "风速",
+              type: "line",
+              stack: "总量",
+              areaStyle: {
+              },
+              smooth: true,
+              data: [120, 132, 101, 134, 90, 230, 210],
+            },
+            {
+              name: "雨量",
+              type: "line",
+              stack: "总量",
+              areaStyle: {},
+              smooth: true,
+              data: [220, 182, 191, 234, 290, 330, 310],
+            }
+          ],
+          color: [lineColor, axisLineColor]
+        };
+        rainWindChart = echarts.init(document.getElementById("rainWindChart"));
+        rainWindChart.setOption(option);
+      }
+
+      function initSiteRankChart() {
+        let option = {
+          title: {
+            text: "观测地点排名",
+            textStyle: {
+              color: axisLineColor,
+              fontSize: 14,
+            },
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+              type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: [
+            {
+              type: 'category',
+              data: ['观测点1', '观测点2', '观测点3', '观测点4', '观测点5', '观测点6', '观测点7'],
+              axisTick: {
+                alignWithLabel: true
+              },
+              axisLine: {
+                lineStyle: {
+                  color: axisLineColor,
+                },
+              },
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value',
+              axisLine: {
+                show: false,
+              },
+              axisLabel: {
+                color: axisLineColor,
+              },
+              splitLine: {
+                lineStyle: {
+                  type: "dashed",
+                  color: axisLineColor,
+                },
+              },
+            }
+          ],
+          series: [
+            {
+              name: '分数',
+              type: 'bar',
+              barWidth: '60%',
+              data: [10, 52, 200, 334, 390, 330, 220]
+            }
+          ],
+          color: [lineColor]
+        };
+        siteRankChart = echarts.init(document.getElementById("siteRankChart"));
+        siteRankChart.setOption(option);
       }
 
       window.onload = function () {
         initMap();
         initRainChart();
+        initRainWetChart();
+        initRainWindChart();
+        initSiteRankChart();
       };
+
+      window.onresize = function () {
+        rainChart.resize()
+        rainWetChart.resize()
+        rainWindChart.resize()
+        siteRankChart.resize()
+      }
     </script>
   </body>
 </html>

@@ -16,7 +16,7 @@ body {
   background-position: center;
   background-size: 100% 100%;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 body.bg01 {
   background-image: url("../img/bg01.png");
@@ -106,4 +106,28 @@ body.bg04 {
 }
 #rainChart {
   height: 100%;
+}
+#rainWetChart {
+  height: 100%;
+}
+#rainWindChart {
+  height: 100%;
+}
+#siteRankChart {
+  height: 100%;
+}
+.warn-table {
+  color: #3E9DD6;
+  width: 100%;
+  font-size: 14px;
+  text-align: center;
+  border-collapse: collapse;
+}
+.warn-table th {
+  border-bottom: 1px solid #2DC4BB;
+  line-height: 40px;
+}
+.warn-table td {
+  border-bottom: 1px solid #2DC4BB;
+  line-height: 40px;
 }
